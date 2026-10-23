@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#11291f" />
+  <meta name="description" content="Christmas Mystery 2026 — тайни подаръци, загадки и коледно приключение." />
+  <title>Christmas Mystery 2026 🎄</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="snow" id="snow" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#home">✦ CHRISTMAS <span>MYSTERY</span></a>
+    <span class="edition">ОБЩЕЖИТИЕТО • 2026</span>
+    <button class="top-rules" id="topRules" type="button">❔ Как се играе?</button>
+  </header>
+  <main id="home">
+    <section class="hero" aria-label="Коледна работилница">
+      <img class="hero-image" src="assets/christmas-workshop.png" alt="Нашата коледна работилница с Дядо Коледа, Снежанка и приятелите като елфи" />
+      <div class="hero-vignette"></div>
+      <div class="hero-label"><span class="dot"></span> ПРИКЛЮЧЕНИЕТО ЗАПОЧВА СКОРО</div>
+    </section>
+    <section class="mission-panel" aria-labelledby="mission-title">
+      <div class="panel-ornament" aria-hidden="true">✦ ❄ ✦</div>
+      <p class="eyebrow">ДО ТАЙНОТО ТЕГЛЕНЕ ОСТАВАТ</p>
+      <h1 id="mission-title">Тайната коледна мисия</h1>
+      <div class="countdown" id="countdown" role="timer" aria-label="Обратно броене до тегленето">
+        <div class="time-card"><strong id="days">--</strong><span>ДНИ</span></div>
+        <div class="time-card"><strong id="hours">--</strong><span>ЧАСА</span></div>
+        <div class="time-card"><strong id="minutes">--</strong><span>МИНУТИ</span></div>
+        <div class="time-card"><strong id="seconds">--</strong><span>СЕКУНДИ</span></div>
+      </div>
+      <p class="event-date">🎅 Теглене: 1 декември, 20:00 ч. · 🎁 Коледен лов: 15 декември, 20:00 ч.</p>
+      <div class="actions">
+        <button class="btn btn-primary" id="registerBtn" type="button">🎁 Включи се в мисията</button>
+        <button class="btn btn-outline" id="loginBtn" type="button">🔑 Вход</button>
+        <button class="btn btn-secondary" id="rulesBtn" type="button">📜 Как се играе?</button>
+      </div>
+      <p class="small-note">Регистрацията ще бъде активна от 20 до 30 ноември 2026 г.</p>
+    </section>
+  </main>
+  <footer>Създадено за нашата компания ♥ · Christmas Mystery 2026</footer>
+
+  <dialog class="modal" id="rulesModal" aria-labelledby="rulesTitle">
+    <div class="modal-head"><span>🎄 КОЛЕДНИТЕ ПРАВИЛА</span><button class="close" data-close type="button" aria-label="Затвори">✕</button></div>
+    <div class="modal-body">
+      <div class="rules-intro"><div class="avatar-placeholder" aria-label="Място за твоя 3D елф аватар">🧝‍♂️<small>ТВОЯТ ЕЛФ<br>СКОРО ТУК</small></div><div><h2 id="rulesTitle">Как се играе?</h2><p>Една тайна мисия, един подарък и само един шанс да разкриеш своя Дядо Коледа.</p><p class="avatar-note">Тук ще добавим твоя 3D персонаж, който държи лист с коледни желания.</p></div></div>
+      <ol class="steps">
+        <li><b>20–30 ноември · Запиши се</b><span>Регистрирай се с име и парола преди крайния срок.</span></li>
+        <li><b>1 декември · Тайно теглене</b><span>Разбери на кого ще подаряваш. Никой не вижда чуждия резултат.</span></li>
+        <li><b>До 14 декември · Скрий подаръка</b><span>Остави го тайно на безопасно място и въведи загадка за местоположението му.</span></li>
+        <li><b>15 декември, 20:00 · Отвори кутията</b><span>Всички загадки се отключват едновременно.</span></li>
+        <li><b>Открий подаръка</b><span>Разгадай подсказката и намери истинската изненада.</span></li>
+        <li><b>Разкрий тайния Дядо Коледа</b><span>Имаш само един опит да познаеш кой ти е подарил подаръка.</span></li>
+      </ol>
+      <p class="rules-foot">🎁 Подаръците са изненада — без списъци с желания!</p>
+    </div>
+  </dialog>
+
+  <dialog class="modal small-modal" id="previewModal" aria-labelledby="previewTitle">
+    <div class="modal-head"><span>🎁 CHRISTMAS MYSTERY</span><button class="close" data-close type="button" aria-label="Затвори">✕</button></div>
+    <div class="modal-body"><h2 id="previewTitle">Скоро!</h2><p id="previewText">Подготвяме защитената регистрация.</p><p class="avatar-note">Това е първата визуална версия на сайта. Профилите ще се активират след свързване със Supabase.</p></div>
+  </dialog>
+</body>
+</html>
