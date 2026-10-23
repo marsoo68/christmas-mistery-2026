@@ -11,3 +11,13 @@
 .account-panel h2{font-size:22px;margin:0 0 8px}
 .account-panel p{line-height:1.6}
 [hidden]{display:none!important}
+
+/* Администраторски панел */
+#adminModal h2{color:#ffe0a1;font-size:24px;margin-top:0}
+.admin-row{display:flex;justify-content:space-between;align-items:center;gap:14px;text-align:left;padding:14px 0;border-bottom:1px solid #ffffff2c}
+.admin-row strong{display:block;font-size:14px;overflow-wrap:anywhere}
+.admin-row small{display:block;color:#dfc69d;margin-top:6px}
+.admin-row .btn{min-width:135px;padding:12px 14px;font-size:12px}
+.admin-badge{font-size:12px;color:#ffdf99}
+.account-panel .btn{margin:7px}
+@media(max-width:500px){.admin-row{align-items:flex-start;flex-direction:column}.admin-row .btn{width:100%}}

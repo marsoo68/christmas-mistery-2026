@@ -7,6 +7,7 @@ const form = document.querySelector('#authForm');
 const status = document.querySelector('#authStatus');
 const panel = document.querySelector('#accountPanel');
 let mode = 'register';
+let currentUser = null;
 const safe = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function openAuth(nextMode){
   mode=nextMode; form.reset();status.textContent='';
@@ -42,6 +43,7 @@ form.addEventListener('submit',async event=>{
 });
 async function refreshAccount(){
   const {data:{user}}=await supabase.auth.getUser();
+  currentUser = user;
   if(!user){panel.hidden=true;document.querySelector('#registerBtn').hidden=false;document.querySelector('#loginBtn').hidden=false;return;}
   document.querySelector('#registerBtn').hidden=true;
   document.querySelector('#loginBtn').hidden=true;
@@ -50,8 +52,43 @@ async function refreshAccount(){
   let text='Профилът се зарежда. Ако току-що потвърди имейла, презареди след малко.';
   if(profile)text=profile.approved?'🎁 Профилът ти е одобрен! Личната мисия ще бъде активирана в следващата версия.':'⏳ Дядо Коледа разглежда заявката ти. Очаквай одобрение!';
   if(error)text='Не успяхме да заредим профила. Опитай да презаредиш страницата.';
-  panel.innerHTML=`<h2>🎄 Здравей, ${safe(profile?.display_name || user.email)}</h2><p>${safe(text)}</p><button class="btn btn-outline" id="logoutBtn" type="button">Изход</button>`;
+  panel.innerHTML=`<h2>🎄 Здравей, ${safe(profile?.display_name || user.email)}</h2><p>${safe(text)}</p>${profile?.is_admin ? '<button class="btn btn-secondary" id="adminBtn" type="button">⚙️ Коледна администрация</button>' : ''}<button class="btn btn-outline" id="logoutBtn" type="button">Изход</button>`;
+  if(profile?.is_admin)document.querySelector('#adminBtn').addEventListener('click',openAdmin);
   document.querySelector('#logoutBtn').addEventListener('click',async()=>{await supabase.auth.signOut();await refreshAccount();});
 }
 supabase.auth.onAuthStateChange(()=>{setTimeout(refreshAccount,0)});
 refreshAccount();
+
+// The RLS policy and RPC on Supabase enforce admin authorization.
+const adminDialog = document.querySelector('#adminModal');
+const adminList = document.querySelector('#adminList');
+const adminStatus = document.querySelector('#adminStatus');
+async function openAdmin(){
+  adminDialog.showModal();
+  await loadParticipants();
+}
+async function loadParticipants(){
+  adminList.innerHTML = '<p>Зареждане на участниците…</p>';
+  adminStatus.textContent = '';
+  const {data, error} = await supabase.from('participants')
+    .select('id,display_name,username,approved,is_admin,created_at')
+    .order('created_at',{ascending:true});
+  if(error){adminList.innerHTML='<p>Грешка при зареждане. Провери RLS настройките.</p>';return;}
+  if(!data?.length){adminList.innerHTML='<p>Няма регистрирани участници.</p>';return;}
+  const pending = data.filter(p=>!p.approved).length;
+  adminStatus.textContent = `Общо: ${data.length} · Чакат одобрение: ${pending}`;
+  adminList.innerHTML = data.map(p=>`<article class="admin-row">
+    <div><strong>${safe(p.display_name)}</strong>${p.is_admin ? ' 👑' : ''}<small>${p.approved?'✅ Одобрен':'⏳ Чака одобрение'}</small></div>
+    ${p.is_admin ? '<span class="admin-badge">Администратор</span>' : `<button type="button" class="btn ${p.approved?'btn-outline':'btn-primary'}" data-id="${p.id}" data-approve="${!p.approved}">${p.approved?'Отмени одобрението':'Одобри'}</button>`}
+  </article>`).join('');
+}
+adminList.addEventListener('click',async e=>{
+  const button=e.target.closest('button[data-id]');
+  if(!button)return;
+  const id=button.dataset.id, approved=button.dataset.approve==='true';
+  button.disabled=true;
+  adminStatus.textContent='Запазване…';
+  const {error}=await supabase.rpc('set_participant_approval',{target_id:id,new_approved:approved});
+  if(error){adminStatus.textContent='Грешка: '+error.message;button.disabled=false;return;}
+  await loadParticipants();
+});
