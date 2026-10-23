@@ -21,3 +21,13 @@
 .admin-badge{font-size:12px;color:#ffdf99}
 .account-panel .btn{margin:7px}
 @media(max-width:500px){.admin-row{align-items:flex-start;flex-direction:column}.admin-row .btn{width:100%}}
+
+/* v4: Коледен елф и тайно теглене */
+.elf-wishlist{display:block;width:215px;max-width:44%;height:250px;object-fit:cover;object-position:center;border-radius:15px;border:2px solid #d8b56f;box-shadow:0 12px 34px #0008;flex-shrink:0}
+.secret-card{margin:18px auto 12px;padding:21px;border-radius:16px;background:linear-gradient(135deg,#6b342c,#2e4c36);border:2px solid #e0bd78;box-shadow:0 12px 36px #0006}
+.secret-card h3{color:#ffe4a4;margin:0 0 9px;font-size:22px}
+.secret-card p{margin:10px 0 15px}
+.secret-recipient{font-size:clamp(23px,4vw,32px);font-weight:900;color:#ffefb7;overflow-wrap:anywhere;margin:14px 0}
+.test-badge{display:inline-block;background:#9d2b28;border:1px solid #f3c88e;padding:5px 12px;border-radius:30px;font-size:11px;font-weight:900;letter-spacing:.06em}
+#revealStatus{font-size:12px;min-height:20px}
+@media(max-width:650px){.elf-wishlist{width:145px;height:190px;max-width:45%}.rules-intro{align-items:center}}

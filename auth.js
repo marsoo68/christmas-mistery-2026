@@ -2,6 +2,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = 'https://iqkzlcuqnqniardrmfij.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_csvBET1dQRafHetiv7SxUw_X8CHtuHM';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// ВРЕМЕНЕН ТЕСТОВ РЕЖИМ: премахни тестовата RPC функция след проверките.
+const TEST_DRAW_MODE = true;
 const modal = document.querySelector('#authModal');
 const form = document.querySelector('#authForm');
 const status = document.querySelector('#authStatus');
@@ -50,9 +52,18 @@ async function refreshAccount(){
   panel.hidden=false;
   const {data:profile,error}=await supabase.from('participants').select('display_name,approved,is_admin').eq('id',user.id).maybeSingle();
   let text='Профилът се зарежда. Ако току-що потвърди имейла, презареди след малко.';
-  if(profile)text=profile.approved?'🎁 Профилът ти е одобрен! Личната мисия ще бъде активирана в следващата версия.':'⏳ Дядо Коледа разглежда заявката ти. Очаквай одобрение!';
+  if(profile)text=profile.approved?'🎁 Профилът ти е одобрен! Можеш да провериш пробното си тайно назначение.':'⏳ Дядо Коледа разглежда заявката ти. Очаквай одобрение!';
   if(error)text='Не успяхме да заредим профила. Опитай да презаредиш страницата.';
-  panel.innerHTML=`<h2>🎄 Здравей, ${safe(profile?.display_name || user.email)}</h2><p>${safe(text)}</p>${profile?.is_admin ? '<button class="btn btn-secondary" id="adminBtn" type="button">⚙️ Коледна администрация</button>' : ''}<button class="btn btn-outline" id="logoutBtn" type="button">Изход</button>`;
+  const secretCard = profile?.approved ? `<section class="secret-card" aria-labelledby="secretTitle">
+    <span class="test-badge">🧪 ПРОБНО ТЕГЛЕНЕ</span>
+    <h3 id="secretTitle">🎁 Моята тайна мисия</h3>
+    <p>Само ти можеш да видиш за кого ще подготвяш подарък.</p>
+    <button class="btn btn-primary" id="revealBtn" type="button">🎁 Разкрий моя получател</button>
+    <p id="revealStatus" role="status" aria-live="polite"></p>
+    <div id="revealResult" class="secret-recipient" hidden></div>
+  </section>` : '';
+  panel.innerHTML=`<h2>🎄 Здравей, ${safe(profile?.display_name || user.email)}</h2><p>${safe(text)}</p>${secretCard}${profile?.is_admin ? '<button class="btn btn-secondary" id="adminBtn" type="button">⚙️ Коледна администрация</button>' : ''}<button class="btn btn-outline" id="logoutBtn" type="button">Изход</button>`;
+  if(profile?.approved)document.querySelector('#revealBtn').addEventListener('click',revealReceiver);
   if(profile?.is_admin)document.querySelector('#adminBtn').addEventListener('click',openAdmin);
   document.querySelector('#logoutBtn').addEventListener('click',async()=>{await supabase.auth.signOut();await refreshAccount();});
 }
@@ -92,3 +103,20 @@ adminList.addEventListener('click',async e=>{
   if(error){adminStatus.textContent='Грешка: '+error.message;button.disabled=false;return;}
   await loadParticipants();
 });
+
+// Сървърът връща само получателя на текущия потребител, без чужди назначения.
+async function revealReceiver(){
+  const button=document.querySelector('#revealBtn');
+  const result=document.querySelector('#revealResult');
+  const message=document.querySelector('#revealStatus');
+  if(!button || !currentUser)return;
+  button.disabled=true;message.textContent='🎄 Елфите проверяват тайната ти мисия…';
+  const {data,error}=await supabase.rpc('get_my_test_receiver');
+  if(!document.querySelector('#revealBtn'))return;
+  button.disabled=false;
+  if(error){message.textContent='Неуспешно разкриване: '+error.message+' (провери дали си изпълнил v4-test-setup.sql)';return;}
+  if(!data){message.textContent='Все още няма назначен получател. Провери дали пробното теглене е направено.';return;}
+  message.textContent='✨ Твоята тайна е разкрита!';
+  result.textContent='🎁 '+data;result.hidden=false;
+  button.textContent='🎄 Покажи отново';
+}
