@@ -7,6 +7,7 @@
   <meta name="description" content="Christmas Mystery 2026 — тайни подаръци, загадки и коледно приключение." />
   <title>Christmas Mystery 2026 🎄</title>
   <link rel="stylesheet" href="style.css" />
+  <script type="module" src="auth.js"></script>
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -32,13 +33,14 @@
         <div class="time-card"><strong id="minutes">--</strong><span>МИНУТИ</span></div>
         <div class="time-card"><strong id="seconds">--</strong><span>СЕКУНДИ</span></div>
       </div>
-      <p class="event-date">🎅 Теглене: 1 декември, 20:00 ч. · 🎁 Коледен лов: 15 декември, 20:00 ч.</p>
+      <p class="event-date">🎅 Теглене: 1 декември, 20:00 ч. · 🎁 Коледен лов: 15 декември, 09:00–23:59 ч.</p>
       <div class="actions">
         <button class="btn btn-primary" id="registerBtn" type="button">🎁 Включи се в мисията</button>
         <button class="btn btn-outline" id="loginBtn" type="button">🔑 Вход</button>
         <button class="btn btn-secondary" id="rulesBtn" type="button">📜 Как се играе?</button>
       </div>
-      <p class="small-note">Регистрацията ще бъде активна от 20 до 30 ноември 2026 г.</p>
+      <p class="small-note">Планирана регистрация: 20–30 ноември 2026 г. · В момента е отворена за тестове.</p>
+      <section id="accountPanel" class="account-panel" hidden aria-live="polite"></section>
     </section>
   </main>
   <footer>Създадено за нашата компания ♥ · Christmas Mystery 2026</footer>
@@ -48,10 +50,10 @@
     <div class="modal-body">
       <div class="rules-intro"><div class="avatar-placeholder" aria-label="Място за твоя 3D елф аватар">🧝‍♂️<small>ТВОЯТ ЕЛФ<br>СКОРО ТУК</small></div><div><h2 id="rulesTitle">Как се играе?</h2><p>Една тайна мисия, един подарък и само един шанс да разкриеш своя Дядо Коледа.</p><p class="avatar-note">Тук ще добавим твоя 3D персонаж, който държи лист с коледни желания.</p></div></div>
       <ol class="steps">
-        <li><b>20–30 ноември · Запиши се</b><span>Регистрирай се с име и парола преди крайния срок.</span></li>
+        <li><b>20–30 ноември · Запиши се</b><span>Регистрирай се с име, имейл и парола и изчакай одобрение.</span></li>
         <li><b>1 декември · Тайно теглене</b><span>Разбери на кого ще подаряваш. Никой не вижда чуждия резултат.</span></li>
-        <li><b>До 14 декември · Скрий подаръка</b><span>Остави го тайно на безопасно място и въведи загадка за местоположението му.</span></li>
-        <li><b>15 декември, 20:00 · Отвори кутията</b><span>Всички загадки се отключват едновременно.</span></li>
+        <li><b>15 декември · Скрий подаръка</b><span>Между 09:00 и 23:59 ч. скрий подаръка на безопасно място и публикувай загадката.</span></li>
+        <li><b>15 декември · Отвори кутията</b><span>Когато подаръкът ти бъде скрит, загадката се появява веднага и можеш да започнеш търсенето.</span></li>
         <li><b>Открий подаръка</b><span>Разгадай подсказката и намери истинската изненада.</span></li>
         <li><b>Разкрий тайния Дядо Коледа</b><span>Имаш само един опит да познаеш кой ти е подарил подаръка.</span></li>
       </ol>
@@ -62,6 +64,20 @@
   <dialog class="modal small-modal" id="previewModal" aria-labelledby="previewTitle">
     <div class="modal-head"><span>🎁 CHRISTMAS MYSTERY</span><button class="close" data-close type="button" aria-label="Затвори">✕</button></div>
     <div class="modal-body"><h2 id="previewTitle">Скоро!</h2><p id="previewText">Подготвяме защитената регистрация.</p><p class="avatar-note">Това е първата визуална версия на сайта. Профилите ще се активират след свързване със Supabase.</p></div>
+  </dialog>
+
+  <dialog class="modal small-modal" id="authModal" aria-labelledby="authTitle">
+    <div class="modal-head"><span>🔐 CHRISTMAS MYSTERY</span><button class="close" data-close type="button" aria-label="Затвори">✕</button></div>
+    <div class="modal-body">
+      <h2 id="authTitle">Регистрация</h2>
+      <form id="authForm">
+        <div id="nameWrap"><label for="authName">Име за играта</label><input id="authName" name="name" autocomplete="name" maxlength="60" required></div>
+        <label for="authEmail">Имейл</label><input id="authEmail" name="email" type="email" autocomplete="email" required>
+        <label for="authPassword">Парола (минимум 8 символа)</label><input id="authPassword" name="password" type="password" minlength="8" autocomplete="new-password" required>
+        <button class="btn btn-primary" id="authSubmit" type="submit">🎁 Регистрирай ме</button>
+      </form>
+      <p id="authStatus" role="status" aria-live="polite"></p>
+    </div>
   </dialog>
 </body>
 </html>

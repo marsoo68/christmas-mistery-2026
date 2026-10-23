@@ -2,7 +2,7 @@
 const DRAW_DATE = new Date('2026-12-01T20:00:00+02:00');
 const REGISTRATION_START = new Date('2026-11-20T00:00:00+02:00');
 const REGISTRATION_END = new Date('2026-12-01T00:00:00+02:00');
-const HUNT_DATE = new Date('2026-12-15T20:00:00+02:00');
+const HUNT_DATE = new Date('2026-12-15T09:00:00+02:00');
 const pad = n => String(n).padStart(2, '0');
 function updateCountdown(){
   const now = new Date();
@@ -20,12 +20,7 @@ const rulesModal = document.querySelector('#rulesModal');
 const previewModal = document.querySelector('#previewModal');
 for (const id of ['rulesBtn', 'topRules']) document.getElementById(id).addEventListener('click', () => rulesModal.showModal());
 function showPreview(title, message){document.querySelector('#previewTitle').textContent=title;document.querySelector('#previewText').textContent=message;previewModal.showModal();}
-document.querySelector('#registerBtn').addEventListener('click',()=>{
-  const now=new Date();
-  const message=now<REGISTRATION_START?'Регистрацията отваря на 20 ноември. След свързване със Supabase тук ще се създава истински профил.':now>=REGISTRATION_END?'Регистрацията е затворена.':'Формата за регистрация ще бъде активирана след защитеното свързване със Supabase.';
-  showPreview('Включи се в мисията',message);
-});
-document.querySelector('#loginBtn').addEventListener('click',()=>showPreview('Вход в профила','Истинският вход ще бъде добавен след настройката на удостоверяването.'));
+// Регистрацията и входът се управляват от auth.js.
 for(const close of document.querySelectorAll('[data-close]')) close.addEventListener('click',()=>close.closest('dialog').close());
 for(const dialog of document.querySelectorAll('dialog')) dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
 const snow=document.querySelector('#snow');
